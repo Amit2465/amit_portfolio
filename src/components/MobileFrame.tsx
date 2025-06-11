@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppType } from '../types';
-import { ArrowLeft, Github, Play, Linkedin, MessageCircle, Hash, Calculator, CheckSquare, Music, Cloud } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 interface MobileFrameProps {
   onAppSelect: (app: AppType | null) => void;
@@ -11,17 +11,62 @@ interface MobileFrameProps {
 
 const MobileFrame = ({ onAppSelect, selectedApp, renderApp }: MobileFrameProps) => {
   const apps = [
-    { id: 'github' as const, name: 'Github', icon: Github, color: 'from-gray-700 to-gray-900' },
-    { id: 'playstore' as const, name: 'Play Store', icon: Play, color: 'from-green-500 to-emerald-500' },
-    { id: 'linkedin' as const, name: 'LinkedIn', icon: Linkedin, color: 'from-blue-600 to-blue-800' },
-    { id: 'whatsapp' as const, name: 'WhatsApp', icon: MessageCircle, color: 'from-green-400 to-green-600' },
+    { 
+      id: 'github' as const, 
+      name: 'GitHub', 
+      image: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png',
+      color: 'from-gray-700 to-gray-900' 
+    },
+    { 
+      id: 'playstore' as const, 
+      name: 'Play Store', 
+      image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge.svg/512px-Google_Play_Store_badge.svg.png',
+      color: 'from-green-500 to-emerald-500' 
+    },
+    { 
+      id: 'linkedin' as const, 
+      name: 'LinkedIn', 
+      image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/512px-LinkedIn_logo_initials.png',
+      color: 'from-blue-600 to-blue-800' 
+    },
+    { 
+      id: 'whatsapp' as const, 
+      name: 'WhatsApp', 
+      image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png',
+      color: 'from-green-400 to-green-600' 
+    },
     
-    { id: 'tictactoe' as AppType, name: 'Tic Tac Toe', icon: Hash, color: 'from-indigo-500 to-purple-500' },
-    { id: 'calculator' as AppType, name: 'Calculator', icon: Calculator, color: 'from-gray-600 to-gray-800' },
-    { id: 'todo' as AppType, name: 'Todo', icon: CheckSquare, color: 'from-green-500 to-emerald-500' },
-    { id: 'music' as AppType, name: 'Music', icon: Music, color: 'from-purple-500 to-indigo-500' },
+    { 
+      id: 'tictactoe' as AppType, 
+      name: 'Tic Tac Toe', 
+      image: 'https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?auto=compress&cs=tinysrgb&w=512',
+      color: 'from-indigo-500 to-purple-500' 
+    },
+    { 
+      id: 'calculator' as AppType, 
+      name: 'Calculator', 
+      image: 'https://images.pexels.com/photos/5625120/pexels-photo-5625120.jpeg?auto=compress&cs=tinysrgb&w=512',
+      color: 'from-gray-600 to-gray-800' 
+    },
+    { 
+      id: 'todo' as AppType, 
+      name: 'Todo', 
+      image: 'https://images.pexels.com/photos/3243/pen-calendar-to-do-checklist.jpg?auto=compress&cs=tinysrgb&w=512',
+      color: 'from-green-500 to-emerald-500' 
+    },
+    { 
+      id: 'music' as AppType, 
+      name: 'Music', 
+      image: 'https://images.pexels.com/photos/164821/pexels-photo-164821.jpeg?auto=compress&cs=tinysrgb&w=512',
+      color: 'from-purple-500 to-indigo-500' 
+    },
     
-    { id: 'weather' as AppType, name: 'Weather', icon: Cloud, color: 'from-blue-400 to-sky-500' },
+    { 
+      id: 'weather' as AppType, 
+      name: 'Weather', 
+      image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=512',
+      color: 'from-blue-400 to-sky-500' 
+    },
   ];
 
   const handleAppClick = (appId: string) => {
@@ -35,8 +80,6 @@ const MobileFrame = ({ onAppSelect, selectedApp, renderApp }: MobileFrameProps) 
   };
 
   const AppIcon = ({ app, index }: { app: any, index: number }) => {
-    const IconComponent = app.icon;
-    
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0, y: 20 }}
@@ -52,8 +95,19 @@ const MobileFrame = ({ onAppSelect, selectedApp, renderApp }: MobileFrameProps) 
         onClick={() => handleAppClick(app.id)}
         className="flex flex-col items-center cursor-pointer"
       >
-        <div className={`w-14 h-14 bg-gradient-to-r ${app.color} rounded-2xl flex items-center justify-center shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 mb-2`}>
-          <IconComponent className="text-white" size={24} />
+        <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 mb-2 bg-white">
+          <img 
+            src={app.image} 
+            alt={app.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to gradient background if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              target.parentElement!.className += ` bg-gradient-to-r ${app.color}`;
+              target.parentElement!.innerHTML += `<div class="w-full h-full flex items-center justify-center text-white font-bold text-xs">${app.name.charAt(0)}</div>`;
+            }}
+          />
         </div>
         <span className="text-white text-xs text-center leading-tight max-w-[60px] truncate">{app.name}</span>
       </motion.div>
