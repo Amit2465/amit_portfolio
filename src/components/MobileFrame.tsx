@@ -1,8 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppType } from '../types';
-import AppIcon from './AppIcon';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Github, Play, Linkedin, MessageCircle, Hash, Calculator, CheckSquare, Music, Apple } from 'lucide-react';
 
 interface MobileFrameProps {
   onAppSelect: (app: AppType | null) => void;
@@ -12,19 +11,15 @@ interface MobileFrameProps {
 
 const MobileFrame = ({ onAppSelect, selectedApp, renderApp }: MobileFrameProps) => {
   const apps = [
-    { id: 'github' as const, name: 'Github', icon: '🐙', color: 'from-gray-700 to-gray-900' },
-    { id: 'playstore' as const, name: 'Play Store', icon: '▶️', color: 'from-green-500 to-emerald-500' },
-    { id: 'linkedin' as const, name: 'LinkedIn', icon: '💼', color: 'from-blue-600 to-blue-800' },
-    { id: 'whatsapp' as const, name: 'WhatsApp', icon: '💬', color: 'from-green-400 to-green-600' },
+    { id: 'github' as const, name: 'Github', icon: Github, color: 'from-gray-700 to-gray-900' },
+    { id: 'playstore' as const, name: 'Play Store', icon: Play, color: 'from-green-500 to-emerald-500' },
+    { id: 'linkedin' as const, name: 'LinkedIn', icon: Linkedin, color: 'from-blue-600 to-blue-800' },
+    { id: 'whatsapp' as const, name: 'WhatsApp', icon: MessageCircle, color: 'from-green-400 to-green-600' },
     
-    { id: 'tictactoe' as AppType, name: 'Tic Tac Toe', icon: '⭕', color: 'from-indigo-500 to-purple-500' },
-    { id: 'calculator' as AppType, name: 'Calculator', icon: '🔢', color: 'from-gray-600 to-gray-800' },
-    { id: 'device' as const, name: 'Device', icon: '🍎', color: 'from-gray-500 to-gray-700' },
-  ];
-
-  const gameApps = [
-    { id: 'todo' as AppType, name: 'Todo', icon: '✅', color: 'from-green-500 to-emerald-500' },
-    { id: 'music' as AppType, name: 'Music', icon: '🎵', color: 'from-purple-500 to-indigo-500' },
+    { id: 'tictactoe' as AppType, name: 'Tic Tac Toe', icon: Hash, color: 'from-indigo-500 to-purple-500' },
+    { id: 'calculator' as AppType, name: 'Calculator', icon: Calculator, color: 'from-gray-600 to-gray-800' },
+    { id: 'todo' as AppType, name: 'Todo', icon: CheckSquare, color: 'from-green-500 to-emerald-500' },
+    { id: 'music' as AppType, name: 'Music', icon: Music, color: 'from-purple-500 to-indigo-500' },
   ];
 
   const handleAppClick = (appId: string) => {
@@ -35,6 +30,31 @@ const MobileFrame = ({ onAppSelect, selectedApp, renderApp }: MobileFrameProps) 
 
   const handleBackClick = () => {
     onAppSelect(null);
+  };
+
+  const AppIcon = ({ app, index }: { app: any, index: number }) => {
+    const IconComponent = app.icon;
+    
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ 
+          duration: 0.6, 
+          delay: 1.2 + index * 0.08,
+          type: "spring",
+          stiffness: 200
+        }}
+        whileHover={{ scale: 1.1, y: -2 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => handleAppClick(app.id)}
+        className="flex flex-col items-center cursor-pointer"
+      >
+        <div className={`w-14 h-14 bg-gradient-to-r ${app.color} rounded-2xl flex items-center justify-center shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300`}>
+          <IconComponent className="text-white" size={24} />
+        </div>
+      </motion.div>
+    );
   };
 
   return (
@@ -137,57 +157,39 @@ const MobileFrame = ({ onAppSelect, selectedApp, renderApp }: MobileFrameProps) 
                       ))}
                     </div>
 
-                    {/* App Grid */}
-                    <div className="grid grid-cols-5 gap-3 mt-4 relative z-10">
+                    {/* App Grid - 4 icons per row */}
+                    <div className="grid grid-cols-4 gap-6 mt-8 relative z-10 justify-items-center">
                       {apps.map((app, index) => (
-                        <motion.div
-                          key={app.id}
-                          initial={{ opacity: 0, scale: 0, y: 20 }}
-                          animate={{ opacity: 1, scale: 1, y: 0 }}
-                          transition={{ 
-                            duration: 0.6, 
-                            delay: 1.2 + index * 0.08,
-                            type: "spring",
-                            stiffness: 200
-                          }}
-                          onClick={() => handleAppClick(app.id)}
-                          className="cursor-pointer"
-                        >
-                          <AppIcon app={app} />
-                        </motion.div>
+                        <AppIcon key={app.id} app={app} index={index} />
                       ))}
                     </div>
 
-                    {/* Enhanced Game Apps in Dock Area */}
+                    {/* Enhanced Dock Area with modern design */}
                     <motion.div 
                       className="absolute bottom-20 left-6 right-6"
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 2, duration: 0.8 }}
                     >
-                      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/20">
-                        <div className="flex justify-center gap-4">
-                          {gameApps.map((app, index) => (
-                            <motion.div
-                              key={app.id}
-                              initial={{ opacity: 0, scale: 0 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ 
-                                delay: 2.2 + index * 0.1, 
-                                duration: 0.5,
-                                type: "spring",
-                                stiffness: 200
-                              }}
-                              whileHover={{ scale: 1.1, y: -2 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => handleAppClick(app.id)}
-                              className="cursor-pointer"
-                            >
-                              <div className={`w-12 h-12 bg-gradient-to-r ${app.color} rounded-xl flex items-center justify-center shadow-lg border border-white/20`}>
-                                <span className="text-lg">{app.icon}</span>
-                              </div>
-                            </motion.div>
-                          ))}
+                      <div className="bg-white/10 backdrop-blur-md rounded-3xl p-4 border border-white/20">
+                        <div className="flex justify-center">
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ 
+                              delay: 2.2, 
+                              duration: 0.5,
+                              type: "spring",
+                              stiffness: 200
+                            }}
+                            whileHover={{ scale: 1.1, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="cursor-pointer"
+                          >
+                            <div className="w-14 h-14 bg-gradient-to-r from-gray-500 to-gray-700 rounded-2xl flex items-center justify-center shadow-lg border border-white/20">
+                              <Apple className="text-white" size={24} />
+                            </div>
+                          </motion.div>
                         </div>
                       </div>
                     </motion.div>
